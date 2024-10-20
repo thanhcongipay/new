@@ -1,0 +1,26 @@
+cp .env.local.example .env.local
+
+php composer.phar update
+php bin/console d:m:m
+
+# generate .htaccess file
+php composer.phar req symfony/apache-pack
+# if it is not generated, reinstall the package:  php composer.phar remove symfony/apache-pack
+
+# set the project to PROD
+nano .env.local # APP_ENV=prod
+# install/update vendors
+php composer.phar install --no-dev --optimize-autoloader
+php composer.phar dump-autoload --optimize --no-dev --classmap-authoritative
+# clear cache
+APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear
+
+# # run ENCORE package
+# node_modules\.bin\encore production
+
+nano .htaccess
+
+# Install NodeJS & npm
+# --> Test ca https://medium.com/@yatko/install-node-js-on-shared-hosting-65fb08deffad
+
+# If error package. Compile locally `npm build` then send to server the `/public/build` folder.
